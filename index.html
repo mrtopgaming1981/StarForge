@@ -599,6 +599,7 @@ const UPGRADES = [
   { id:'u10',name:'Supernova Click',    cost:500000,    desc:'Click power x5',              effect:'click',  mult:5,       req:75 },
   { id:'u11',name:'Quasar Sync',        cost:2000000,   desc:'All generators x2',           effect:'allgen', mult:2,       req:100 },
   { id:'u12',name:'Cosmic Override',    cost:10000000,  desc:'Click power x10',             effect:'click',  mult:10,      req:150 },
+  {id:'u13',name:'Entropy Converter',cost:10000000,desc:'Click power gains 1% of your DPS each click',effect:'clickFromDps',percent:0.01,req:75,unlockR:'r13'},
 ];
 
 // ============================================================
@@ -617,6 +618,7 @@ const REBIRTH_UPGRADES = [
   { id:'r10', name:'Stellar Infinity', rpCost:15, desc:'Start with 10M dust',                  effect:'startDust', val:10000000 },
   { id:'r11', name:'Dark Convergence', rpCost:20, desc:'Permanent x10 click power',            effect:'clickMult', val:10 },
   { id:'r12', name:'Omni Collapse',    rpCost:30, desc:'Everything x10 permanently',           effect:'omni',      val:10 },
+  {id:'r13',rpCost:10,name:'Reality Feedback Loop',desc:'Unlock Entropy Converter (DPS → Click scaling)',effect:'unlockMain'},
 ];
 
 // ============================================================
@@ -680,11 +682,23 @@ function calcDps() {
 
 function calcClickPower() {
   let power = 1;
+
+  // normal click upgrades
   UPGRADES.forEach(u => {
     if (boughtUpgrades.has(u.id) && u.effect === 'click') {
       power *= u.mult;
     }
   });
+
+  // DPS → click scaling upgrade
+  UPGRADES.forEach(u => {
+    if (boughtUpgrades.has(u.id) && u.effect === 'clickFromDps') {
+      power += G.dps * u.percent;
+    }
+  });
+
+  return Math.max(1, Math.floor(power));
+}
   // Rebirth click multipliers
   REBIRTH_UPGRADES.forEach(r => {
     if (boughtRUpgrades.has(r.id) && r.effect === 'clickMult') {
@@ -742,7 +756,9 @@ function renderUpgrades() {
   UPGRADES.forEach(u => {
     const bought = boughtUpgrades.has(u.id);
     const canAfford = G.dust >= u.cost;
-    const unlocked = totalGen >= u.req;
+    const unlocked =
+  totalGen >= u.req &&
+  (!u.unlockR || boughtRUpgrades.has(u.unlockR));
 
     const card = document.createElement('div');
     card.className = 'upgrade-card' +
