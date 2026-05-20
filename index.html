@@ -978,9 +978,9 @@ document.getElementById('confirmRebirth').addEventListener('click', function() {
 });
 
 function doRebirth() {
-  const earned = calcRebirthPoints();
-  G.rebirthPoints += earned;
-  G.rebirths++;
+const earned = calcRebirthPoints();
+G.rebirthPoints += earned;
+G.rebirths = G.rebirthPoints;
   G.totalEarned = 0;
   G.dust = 0;
   G.totalClicks = 0;
