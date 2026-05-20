@@ -600,23 +600,25 @@ const UPGRADES = [
   { id:'u10',name:'Supernova Click',    cost:500000,    desc:'Click power x5',              effect:'click',  mult:5,       req:75 },
   { id:'u11',name:'Quasar Sync',        cost:2000000,   desc:'All generators x2',           effect:'allgen', mult:2,       req:100 },
   { id:'u12',name:'Cosmic Override',    cost:10000000,  desc:'Click power x10',             effect:'click',  mult:10,      req:150 },
+  { id:'u13',name:'Dominion Expansion',    cost:200000000,  desc:'Stellar Dominion x2',     effect:'gen',    idx:9, mult:2,      req:150 },
+    { id:'u14', name:'Supreme Covenant',         cost:250000000,    desc:'All generators x2',           effect:'allgen', mult:2,       req:150 },
 ];
 
 // ============================================================
 // REBIRTH UPGRADES
 // ============================================================
 const REBIRTH_UPGRADES = [
-  { id:'r1',  name:'Stardust Memory',  rpCost:1,  desc:'Start each run with 500 dust',         effect:'startDust', val:500 },
+  { id:'r1',  name:'Stardust Memory',  rpCost:1,  desc:'Start each run with 5000 dust',         effect:'startDust', val:5000 },
   {id:'r13',rpCost:1,name:'Reality Feedback Loop',desc:'Unlock Entropy Converter (DPS → Click scaling)',effect:'unlockMain'},
   { id:'r2',  name:'Eternal Click',    rpCost:1,  desc:'Permanent +50% click power',           effect:'clickMult', val:1.5 },
   { id:'r3',  name:'Cosmic Residue',   rpCost:2,  desc:'All generators +75% output',           effect:'genMult',   val:1.75 },
   { id:'r4',  name:'Nova Catalyst',    rpCost:3,  desc:'Start each run with 50,000 dust',      effect:'startDust', val:50000 },
   { id:'r5',  name:'Singularity Tap',  rpCost:4,  desc:'Permanent x3 click power',             effect:'clickMult', val:3 },
   { id:'r6',  name:'Galaxy Memory',    rpCost:5,  desc:'All generators x2 output',             effect:'genMult',   val:2 },
-  { id:'r7',  name:'Temporal Anchor',  rpCost:6,  desc:'Start with all generators at 5 count', effect:'startGen',  val:5 },
   { id:'r8',  name:'Void Resonance',   rpCost:8,  desc:'Permanent x5 click power',             effect:'clickMult', val:5 },
   { id:'r9',  name:'Nebula Cascade',   rpCost:10, desc:'All generators x3 output',             effect:'genMult',   val:3 },
   { id:'r10', name:'Stellar Infinity', rpCost:15, desc:'Start with 10M dust',                  effect:'startDust', val:10000000 },
+  { id:'r7',  name:'Temporal Anchor',  rpCost:15,  desc:'Start with all generators at 5 count', effect:'startGen',  val:5 },
   { id:'r11', name:'Dark Convergence', rpCost:20, desc:'Permanent x10 click power',            effect:'clickMult', val:10 },
   { id:'r12', name:'Omni Collapse',    rpCost:30, desc:'Everything x10 permanently',           effect:'omni',      val:10 },
 ];
@@ -632,6 +634,9 @@ const GEN_DATA = [
   { id:'g4', name:'Quasar Beam',     baseCost:130000,  baseDps:100,  color:'#1a4e0a' },
   { id:'g5', name:'Galaxy Engine',   baseCost:1400000, baseDps:400,  color:'#4e3a0a' },
   { id:'g6', name:'Multiverse Node', baseCost:20000000,baseDps:2000, color:'#4e0a3a' },
+  { id:'g7', name:'Reality Condenser', baseCost:50000000,baseDps:15000, color:'#FF0000' },
+  { id:'g8', name:'Nebula Nexus', baseCost:100000000,baseDps:40000, color:'#FF69B4' },
+  { id:'g9', name:'Stellar Dominion', baseCost:150000000,baseDps:100000, color:'#40E0D0' },
 ];
 
 const genCounts = GEN_DATA.map(() => 0);
