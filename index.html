@@ -645,7 +645,7 @@ const genCounts = GEN_DATA.map(() => 0);
 const boughtUpgrades  = new Set();
 const boughtRUpgrades = new Set();
 
-const REBIRTH_THRESHOLD = 1e9; // 10 Trillion
+const REBIRTH_THRESHOLD = 1e9;
 
 // ============================================================
 // HELPERS
@@ -732,7 +732,9 @@ function getTotalGenCount() {
 
 function calcRebirthPoints() {
   if (G.totalEarned < 1e9) return 0;
-  return Math.floor(Math.log10(G.totalEarned / 1e9) + 1);
+
+  // RP = floor(log2(totalEarned / 1 billion)) + 1
+  return Math.floor(Math.log2(G.totalEarned / 1e9)) + 1;
 }
 
 // ============================================================
