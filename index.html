@@ -689,10 +689,6 @@ const REBIRTH_THRESHOLD = 1e9;
 // ============================================================
 // HELPERS
 // ============================================================
-function applyClickCap(clickPower) {
-  const maxAllowed = G.dps * 0.75;
-  return Math.min(clickPower, maxAllowed);
-}
 function fmt(n) {
   if (n < 1000) return Math.floor(n).toString();
   const suffixes = ['K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc'];
