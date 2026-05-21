@@ -6,7 +6,8 @@
 <title>Star Forge</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
-#resetSaveBtn {
+#resetSaveBtn,
+#resetStyleBtn {
   padding: 8px 14px;
   background: transparent;
   border: 1px solid var(--red);
@@ -20,7 +21,8 @@
   transition: all 0.2s;
 }
 
-#resetSaveBtn:hover {
+#resetSaveBtn:hover,
+#resetStyleBtn:hover {
   background: rgba(255, 68, 102, 0.1);
   box-shadow: 0 0 12px rgba(255, 68, 102, 0.3);
   transform: scale(1.05);
@@ -65,24 +67,41 @@
   @keyframes twinkle { from { opacity: 0.1; } to { opacity: 0.9; } }
 
   /* HEADER */
-  header {
-    position: relative; z-index: 10;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 20px;
-    background: linear-gradient(90deg, #060a18, #0a0f22, #060a18);
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  header h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.3rem; font-weight: 900;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    letter-spacing: 3px;
-  }
-  .header-stats {
-    display: flex; gap: 20px; font-size: 0.75rem;
-  }
+header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #060a18, #0a0f22, #060a18);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+header h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-250%);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 3px;
+  margin: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.header-stats {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  font-size: 0.75rem;
+  pointer-events: none;
+}
   .hstat { text-align: center; }
   .hstat span { display: block; color: var(--dim); font-size: 0.65rem; }
   .hstat strong { color: var(--gold); font-family: 'Orbitron', sans-serif; font-size: 0.8rem; }
@@ -307,7 +326,148 @@
     0%,100% { box-shadow: 0 0 30px rgba(0,212,255,0.4), 0 0 80px rgba(0,212,255,0.2), 0 0 150px rgba(0,212,255,0.1), inset 0 0 40px rgba(0,0,0,0.5); }
     50% { box-shadow: 0 0 50px rgba(0,212,255,0.6), 0 0 120px rgba(0,212,255,0.3), 0 0 200px rgba(0,212,255,0.15), inset 0 0 40px rgba(0,0,0,0.5); }
   }
+  .bg-redwar {
+  background: radial-gradient(circle at top left, rgba(255,0,0,0.15), transparent 40%),
+              radial-gradient(circle at bottom right, rgba(120,0,0,0.2), transparent 40%),
+              linear-gradient(180deg, #050000, #120000, #000000);
+  overflow: hidden;
+  position: relative;
+}
+.ship {
+  position: fixed;
+  width: 20px;
+  height: 10px;
+  background: rgba(255, 50, 50, 0.8);
+  clip-path: polygon(0% 50%, 100% 0%, 80% 50%, 100% 100%);
+  box-shadow: 0 0 10px rgba(255,0,0,0.8);
+  animation: flyShip linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
 
+@keyframes flyShip {
+  0% {
+    transform: translateX(-20vw) translateY(var(--y)) scaleX(-1);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(120vw) translateY(var(--y)) scaleX(-1);
+    opacity: 0;
+  }
+}
+.cosmetic-solar {
+  background: radial-gradient(circle at 35% 35%,
+    #fff3a0 0%,
+    #ffbb00 30%,
+    #ff6600 60%,
+    #331100 100%) !important;
+
+  box-shadow:
+    0 0 40px rgba(255,170,0,0.6),
+    0 0 120px rgba(255,120,0,0.3),
+    0 0 220px rgba(255,80,0,0.15),
+    inset 0 0 40px rgba(0,0,0,0.5) !important;
+}
+
+.cosmetic-void {
+  background: radial-gradient(circle at 35% 35%,
+    #d0a0ff 0%,
+    #6600ff 30%,
+    #220044 60%,
+    #000000 100%) !important;
+
+  box-shadow:
+    0 0 50px rgba(120,0,255,0.5),
+    0 0 140px rgba(80,0,255,0.25),
+    0 0 250px rgba(50,0,120,0.15),
+    inset 0 0 40px rgba(0,0,0,0.7) !important;
+}
+.cosmetic-rainbow {
+  background: linear-gradient(
+    45deg,
+    red,
+    orange,
+    yellow,
+    lime,
+    cyan,
+    blue,
+    purple,
+    red
+  ) !important;
+
+  background-size: 400% 400% !important;
+
+  animation:
+    rainbowShift 3s linear infinite,
+    rainbowPulse 2s ease-in-out infinite !important;
+
+  box-shadow:
+    0 0 40px rgba(255,255,255,0.7),
+    0 0 120px rgba(255,255,255,0.3),
+    0 0 220px rgba(255,255,255,0.15),
+    inset 0 0 40px rgba(0,0,0,0.4) !important;
+}
+
+@keyframes rainbowShift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+@keyframes rainbowPulse {
+  0%,100% {
+    transform: scale(1);
+    filter: hue-rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.03);
+    filter: hue-rotate(180deg);
+  }
+}
+.cosmetic-frozen {
+  background: radial-gradient(circle at 35% 35%,
+    #e0ffff 0%,
+    #66ccff 30%,
+    #0066aa 60%,
+    #001122 100%) !important;
+
+  box-shadow:
+    0 0 40px rgba(100,200,255,0.7),
+    0 0 120px rgba(0,150,255,0.3),
+    inset 0 0 40px rgba(0,0,0,0.5) !important;
+}
+
+.cosmetic-blood {
+  background: radial-gradient(circle at 35% 35%,
+    #ff9999 0%,
+    #ff0000 30%,
+    #660000 60%,
+    #110000 100%) !important;
+
+  box-shadow:
+    0 0 50px rgba(255,0,0,0.6),
+    0 0 140px rgba(180,0,0,0.3),
+    inset 0 0 40px rgba(0,0,0,0.6) !important;
+}
+
+.bg-galaxy {
+  background:
+    radial-gradient(circle at top left, rgba(0,150,255,0.1), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(180,0,255,0.1), transparent 40%),
+    radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 60%),
+    var(--bg);
+}
+.bg-nebula {
+  background:
+    radial-gradient(circle at top left, rgba(255,0,150,0.08), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(0,200,255,0.08), transparent 40%),
+    var(--bg);
+}
   /* CLICK VALUE */
   .click-value {
     font-size: 0.7rem; color: var(--dim);
@@ -522,7 +682,14 @@
 
 <!-- HEADER -->
 <header>
+
+  <!-- LEFT SIDE -->
+  <button id="resetSaveBtn" onclick="deleteSave()">RESET SAVE</button>
+
+  <!-- CENTER TITLE -->
   <h1>STAR FORGE</h1>
+
+  <!-- CENTER STATS (kept in middle via CSS absolute centering) -->
   <div class="header-stats">
     <div class="hstat">
       <span>STARDUST</span>
@@ -545,7 +712,10 @@
       <strong id="hRP" style="color:var(--rebirth)">0</strong>
     </div>
   </div>
-  <button id="resetSaveBtn" onclick="deleteSave()">RESET SAVE</button>
+
+  <!-- RIGHT SIDE -->
+  <button id="resetStyleBtn" onclick="resetToDefault()">RESET STYLE</button>
+
 </header>
 
 <!-- GAME LAYOUT -->
@@ -557,10 +727,12 @@
       <button class="tab-btn active" id="tabUpgrades" onclick="switchTab('upgrades')">UPGRADES</button>
       <button class="tab-btn rebirth-tab" id="tabRebirth" onclick="switchTab('rebirth')">REBIRTH</button>
       <button class="tab-btn" id="tabStats" onclick="switchTab('stats')">STATS</button>
+<button class="tab-btn" id="tabCosmetics" onclick="switchTab('cosmetics')">STYLE</button>
     </div>
     <div class="panel-content" id="panelUpgrades"></div>
     <div class="panel-content hidden" id="panelRebirth"></div>
     <div class="panel-content hidden" id="panelStats"></div>
+	<div class="panel-content hidden" id="panelCosmetics"></div>
   </div>
 
   <!-- CENTER -->
@@ -661,6 +833,19 @@ const REBIRTH_UPGRADES = [
   { id:'r11', name:'Dark Convergence', rpCost:20, desc:'Permanent x10 click power',            effect:'clickMult', val:10 },
   { id:'r12', name:'Omni Collapse',    rpCost:30, desc:'Everything x10 permanently',           effect:'omni',      val:10 },
 ];
+// ============================================================
+// COSMETICS
+// ============================================================
+const COSMETICS = [
+  {id:'c1',name:'Solar Flare',cost:2,desc:'Golden orb glow',type:'orb',class:'cosmetic-solar'},
+  {id:'c2',name:'Void Core',cost:4,desc:'Dark purple singularity orb',type:'orb',class:'cosmetic-void'},
+  {id:'c3',name:'Nebula Dream',cost:5,desc:'Pink-blue nebula background',type:'background',class:'bg-nebula'},
+    {id:'c4',name:'Frozen Star',cost:6,desc:'Icy blue orb',type:'orb',class:'cosmetic-frozen'},
+  {id:'c5',name:'Blood Moon',cost:8,desc:'Red cosmic orb',type:'orb',class:'cosmetic-blood'},
+  {id:'c6',name:'Galaxy Storm',cost:10,desc:'Animated galaxy background',type:'background',class:'bg-galaxy'},
+  {id:'c999',name:'???',cost:1000,desc:'The forbidden orb.',type:'orb',class:'cosmetic-rainbow'},
+  {id:'c7',name:'Red Warzone',cost:15,desc:'Dark red space with flying ships',type:'background',class:'bg-redwar'}
+];
 
 // ============================================================
 // GENERATORS
@@ -683,12 +868,49 @@ const genCounts = GEN_DATA.map(() => 0);
 // Tracking what's bought
 const boughtUpgrades  = new Set();
 const boughtRUpgrades = new Set();
+const boughtCosmetics = new Set();
+
+const equippedCosmetics = {
+  orb: null,
+  background: null
+};
 
 const REBIRTH_THRESHOLD = 1e9;
 
 // ============================================================
 // HELPERS
 // ============================================================
+function applyCosmetics() {
+  const orb = document.getElementById('mainOrb');
+
+  // Remove every cosmetic class automatically
+  COSMETICS.forEach(c => {
+    if (c.type === 'orb') {
+      orb.classList.remove(c.class);
+    }
+
+    if (c.type === 'background') {
+      document.body.classList.remove(c.class);
+    }
+  });
+
+  // Apply equipped cosmetics
+  Object.values(equippedCosmetics).forEach(id => {
+    if (!id) return;
+
+    const cosmetic = COSMETICS.find(c => c.id === id);
+
+    if (!cosmetic) return;
+
+    if (cosmetic.type === 'orb') {
+      orb.classList.add(cosmetic.class);
+    }
+
+    if (cosmetic.type === 'background') {
+      document.body.classList.add(cosmetic.class);
+    }
+  });
+}
 function fmt(n) {
   if (n < 1000) return Math.floor(n).toString();
   const suffixes = ['K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc'];
@@ -813,15 +1035,59 @@ function switchTab(tab) {
   document.getElementById('panelUpgrades').classList.toggle('hidden', tab !== 'upgrades');
   document.getElementById('panelRebirth').classList.toggle('hidden', tab !== 'rebirth');
   document.getElementById('panelStats').classList.toggle('hidden', tab !== 'stats');
+  document.getElementById('panelCosmetics').classList.toggle('hidden', tab !== 'cosmetics');
   document.getElementById('tabUpgrades').classList.toggle('active', tab === 'upgrades');
   document.getElementById('tabRebirth').classList.toggle('active', tab === 'rebirth');
   document.getElementById('tabStats').classList.toggle('active', tab === 'stats');
+  document.getElementById('tabCosmetics').classList.toggle('active', tab === 'cosmetics');
   if (tab === 'stats') renderStats();
+  if (tab === 'cosmetics') renderCosmetics();
 }
 
 // ============================================================
 // RENDER UPGRADES
 // ============================================================
+function renderCosmetics() {
+  const panel = document.getElementById('panelCosmetics');
+  panel.innerHTML = '';
+
+  COSMETICS.forEach(c => {
+    const owned = boughtCosmetics.has(c.id);
+    const canAfford = G.rebirthPoints >= c.cost;
+    const equipped = equippedCosmetics[c.type] === c.id;
+
+    const card = document.createElement('div');
+
+    card.className = 'upgrade-card' +
+      (owned ? ' bought' : '') +
+      (!owned && canAfford ? ' affordable' : '');
+
+    let buttonText = '';
+
+    if (!owned) {
+      buttonText = c.cost + ' RP';
+    } else if (equipped) {
+      buttonText = 'EQUIPPED';
+    } else {
+      buttonText = 'CLICK TO EQUIP';
+    }
+
+    card.innerHTML =
+      '<div class="upgrade-name">' + c.name + '</div>' +
+      '<div class="upgrade-desc">' + c.desc + '</div>' +
+      '<div class="upgrade-cost">' + buttonText + '</div>';
+
+    card.addEventListener('click', () => {
+      if (!owned) {
+        buyCosmetic(c.id);
+      } else {
+        equipCosmetic(c.id);
+      }
+    });
+
+    panel.appendChild(card);
+  });
+}
 function renderUpgrades() {
   const panel = document.getElementById('panelUpgrades');
   panel.innerHTML = '';
@@ -999,6 +1265,37 @@ function buyUpgrade(id) {
   showToast('Purchased: ' + u.name);
   renderAll();
 }
+function buyCosmetic(id) {
+  const c = COSMETICS.find(x => x.id === id);
+  if (!c) return;
+
+  if (boughtCosmetics.has(id)) return;
+  if (G.rebirthPoints < c.cost) return;
+
+  G.rebirthPoints -= c.cost;
+  boughtCosmetics.add(id);
+
+  showToast('Unlocked cosmetic: ' + c.name, true);
+
+  // IMPORTANT: update UI immediately
+  renderAll();
+  if (currentTab === 'cosmetics') renderCosmetics();
+}
+
+function equipCosmetic(id) {
+  const c = COSMETICS.find(x => x.id === id);
+  if (!c) return;
+
+  equippedCosmetics[c.type] = id;
+
+  applyCosmetics();
+
+  showToast('Equipped: ' + c.name, true);
+
+  // IMPORTANT: update UI immediately
+  renderAll();
+  if (currentTab === 'cosmetics') renderCosmetics();
+}
 
 function buyRebirthUpgrade(id) {
   const r = REBIRTH_UPGRADES.find(x => x.id === id);
@@ -1164,6 +1461,24 @@ function showToast(msg, isRebirth) {
 // ============================================================
 // STARS
 // ============================================================
+function spawnShips() {
+  setInterval(() => {
+    if (!document.body.classList.contains('bg-redwar')) return;
+
+    const ship = document.createElement('div');
+    ship.className = 'ship';
+
+    ship.style.top = Math.random() * 100 + 'vh';
+    ship.style.setProperty('--y', Math.random() * 50 + 'px');
+    ship.style.animationDuration = (5 + Math.random() * 5) + 's';
+
+    document.body.appendChild(ship);
+
+    setTimeout(() => ship.remove(), 12000);
+  }, 800);
+}
+
+spawnShips();
 (function createStars() {
   const sf = document.getElementById('starfield');
   for (let i = 0; i < 120; i++) {
@@ -1250,12 +1565,14 @@ function gameTick() {
 // SAVE / LOAD SYSTEM
 // ============================================================
 function saveGame() {
-  const saveData = {
-    G: G,
-    genCounts: [...genCounts],
-    boughtUpgrades: [...boughtUpgrades],
-    boughtRUpgrades: [...boughtRUpgrades]
-  };
+const saveData = {
+  G: G,
+  genCounts: [...genCounts],
+  boughtUpgrades: [...boughtUpgrades],
+  boughtRUpgrades: [...boughtRUpgrades],
+  boughtCosmetics: [...boughtCosmetics],
+  equippedCosmetics: equippedCosmetics
+};
 
   localStorage.setItem('starForgeSave', JSON.stringify(saveData));
   showToast('Game Saved!');
@@ -1280,8 +1597,16 @@ function loadGame() {
   (saveData.boughtUpgrades || []).forEach(id => boughtUpgrades.add(id));
 
   // Restore rebirth upgrades
-  boughtRUpgrades.clear();
-  (saveData.boughtRUpgrades || []).forEach(id => boughtRUpgrades.add(id));
+boughtRUpgrades.clear();
+(saveData.boughtRUpgrades || []).forEach(id => boughtRUpgrades.add(id));
+
+// Restore cosmetics
+boughtCosmetics.clear();
+(saveData.boughtCosmetics || []).forEach(id => boughtCosmetics.add(id));
+
+Object.assign(equippedCosmetics, saveData.equippedCosmetics || {});
+
+applyCosmetics();
 
   // Reset timer so offline time doesn't break
   G.lastTick = Date.now();
@@ -1292,7 +1617,25 @@ function loadGame() {
 
   showToast('Game Loaded!', true);
 }
+function resetToDefault() {
+  if (!confirm('Reset cosmetics and visuals to default?')) return;
 
+  // ONLY remove equipped cosmetics (NOT ownership)
+  equippedCosmetics.orb = null;
+  equippedCosmetics.background = null;
+
+  // Remove visual effects
+  const orb = document.getElementById('mainOrb');
+  orb.classList.remove('cosmetic-solar', 'cosmetic-void');
+
+  document.body.classList.remove('bg-nebula');
+
+  // Re-apply (now default state)
+  applyCosmetics();
+
+  showToast('Cosmetics reset to default!', true);
+  renderAll();
+}
 function deleteSave() {
   if (!confirm('Are you sure you want to reset your entire game?')) return;
 
@@ -1314,14 +1657,25 @@ function deleteSave() {
     genCounts[i] = 0;
   }
 
-  // Reset all upgrades
+  // Reset upgrades
   boughtUpgrades.clear();
   boughtRUpgrades.clear();
 
-  // Update the display immediately
+// Reset cosmetics
+boughtCosmetics.clear();
+
+// Reset equipped cosmetics
+Object.keys(equippedCosmetics).forEach(key => {
+  equippedCosmetics[key] = null;
+});
+
+// Remove all cosmetic classes visually
+applyCosmetics();
+
+  // Update display
   renderAll();
 
-  // Reload after a short delay
+  // Reload page
   setTimeout(() => {
     location.reload();
   }, 100);
