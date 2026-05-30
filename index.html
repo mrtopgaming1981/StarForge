@@ -657,6 +657,181 @@ header h1 {
 
   /* HIDDEN */
   .hidden { display: none !important; }
+  /* =========================
+   BLACK MARKET OVERLAY
+========================= */
+
+.rebirth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.rebirth-overlay.hidden {
+  display: none;
+}
+
+/* popup container */
+.rebirth-market {
+  width: 900px;
+  height: 600px;
+  background: linear-gradient(180deg, #0a0a0f, #050508);
+  border: 2px solid #222;
+  box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+
+  transform: scale(0.7);
+  opacity: 0;
+  animation: marketIn 0.25s ease forwards;
+}
+
+@keyframes marketIn {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   MERCHANT (PIXEL STYLE BASE)
+========================= */
+
+.merchant {
+  width: 180px;
+  height: 100%;
+  background: #111;
+  border: 1px solid #222;
+  position: relative;
+}
+
+/* head */
+.merchant-head {
+  width: 60px;
+  height: 60px;
+  background: #2a1c12;
+  position: absolute;
+  top: 40px;
+  left: 60px;
+  box-shadow: 0 0 0 2px #000;
+}
+
+/* body */
+.merchant-body {
+  width: 90px;
+  height: 140px;
+  background: #1b1b1b;
+  position: absolute;
+  top: 110px;
+  left: 45px;
+}
+
+/* eyes glow */
+.merchant-eyes {
+  width: 20px;
+  height: 5px;
+  background: red;
+  position: absolute;
+  top: 65px;
+  left: 80px;
+  box-shadow: 0 0 10px red;
+  animation: blink 3s infinite;
+}
+
+@keyframes blink {
+  0%, 95%, 100% { opacity: 1; }
+  96%, 98% { opacity: 0; }
+}
+
+/* speech */
+.merchant-text {
+  position: absolute;
+  bottom: 460px;
+  left: 128px;
+  font-size: 0.75rem;
+  color: #FF0000;
+  text-shadow: 0 0 5px black;
+}
+/* =========================
+   MERCHANT ANIMATION
+========================= */
+
+.merchant {
+  animation: merchantSway 4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes merchantSway {
+  0%   { transform: translateY(0px) rotate(-1deg); }
+  50%  { transform: translateY(3px) rotate(1deg); }
+  100% { transform: translateY(0px) rotate(-1deg); }
+}
+
+/* glow pulse */
+.merchant-eyes {
+  animation: blink 3s infinite, eyeGlow 2s ease-in-out infinite;
+}
+
+@keyframes eyeGlow {
+  0%,100% { box-shadow: 0 0 8px red; }
+  50% { box-shadow: 0 0 18px red; }
+}
+/* =========================
+   BLACK MARKET GRID
+========================= */
+
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+/* each column */
+.market-column {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid #222;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* upgrade card */
+.market-upgrade {
+  background: #0f0f14;
+  border: 1px solid #1f1f1f;
+  padding: 8px;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.market-upgrade:hover {
+  transform: scale(1.03);
+  border-color: #444;
+}
+
+/* locked fog */
+.market-locked {
+  background: #050508;
+  color: #333;
+  pointer-events: none;
+  filter: blur(0.5px);
+}
+
+/* hidden fog of war */
+.market-hidden {
+  background: #000;
+  color: #111;
+  text-align: center;
+}
 </style>
 </head>
 <body>
@@ -725,12 +900,39 @@ header h1 {
   <div class="panel">
     <div class="panel-tabs">
       <button class="tab-btn active" id="tabUpgrades" onclick="switchTab('upgrades')">UPGRADES</button>
-      <button class="tab-btn rebirth-tab" id="tabRebirth" onclick="switchTab('rebirth')">REBIRTH</button>
+      <button class="tab-btn rebirth-tab" id="tabRebirth" onclick="openRebirthMarket()">REBIRTH</button>
       <button class="tab-btn" id="tabStats" onclick="switchTab('stats')">STATS</button>
 <button class="tab-btn" id="tabCosmetics" onclick="switchTab('cosmetics')">STYLE</button>
     </div>
     <div class="panel-content" id="panelUpgrades"></div>
-    <div class="panel-content hidden" id="panelRebirth"></div>
+    <!-- BLACK MARKET OVERLAY -->
+<div id="rebirthOverlay" class="rebirth-overlay hidden">
+  <div id="rebirthMarket" class="rebirth-market">
+  <div class="rebirth-close" onclick="closeRebirthMarket()">✕</div>
+
+    <!-- MERCHANT (placeholder for now) -->
+    <div class="merchant">
+      <div class="merchant-head"></div>
+      <div class="merchant-body"></div>
+      <div class="merchant-eyes"></div>
+      <div class="merchant-text" id="merchantText">Want power!?</div>
+    </div>
+
+    <!-- CONTENT AREA (your upgrades go here later) -->
+    <div class="rebirth-content" id="panelRebirth">
+  <div class="market-grid" id="rebirthGrid">
+
+  <div class="market-column" id="cacheCol"></div>
+
+  <div class="market-column" id="rebirthCol"></div>
+
+  <div class="market-column" id="genCol"></div>
+
+</div>
+</div>
+
+  </div>
+</div>
     <div class="panel-content hidden" id="panelStats"></div>
 	<div class="panel-content hidden" id="panelCosmetics"></div>
   </div>
@@ -778,7 +980,7 @@ header h1 {
 // GAME STATE
 // ============================================================
 const G = {
-  dust: 100,
+  dust: 0,
   totalEarned: 0,
   totalClicks: 0,
   rebirths: 0,
@@ -792,50 +994,62 @@ const G = {
 // UPGRADES (standard)
 // ============================================================
 const UPGRADES = [
-  { id:'u1', name:'Polished Lens',      cost:50,        desc:'Click power x2',              effect:'click',  mult:2,       req:0 },
-  { id:'u2', name:'Dust Magnet',        cost:200,       desc:'Nebula Drift output x2',      effect:'gen',    idx:0, mult:2, req:1 },
-  { id:'u3', name:'Quantum Tap',        cost:500,       desc:'Click power x2',              effect:'click',  mult:2,       req:2 },
-  { id:'u4', name:'Resonance Field',    cost:2000,      desc:'All generators x1.5',         effect:'allgen', mult:1.5,     req:5 },
-  { id:'u5', name:'Stellar Drift',      cost:5000,      desc:'Click power x3',              effect:'click',  mult:3,       req:10 },
-  { id:'u6', name:'Pulsar Tune',        cost:8000,      desc:'Pulsar Array x2',             effect:'gen',    idx:1, mult:2, req:10 },
-  { id:'u7', name:'Void Tap',           cost:20000,     desc:'Click power x2',              effect:'click',  mult:2,       req:20 },
-  { id:'u8', name:'Dark Attractor',     cost:50000,     desc:'Black Hole Tap x2',           effect:'gen',    idx:2, mult:2, req:25 },
-  {id:'u9',name:'Entropy Converter',cost:100000,desc:'Click power gains 1% of your DPS each click',effect:'clickFromDps',percent:0.01,req:25,unlockR:'r13'},
-  { id:'u15', name:'Stellar Overcharge',         cost:150000,    desc:'Supernova Core x2',           effect:'gen', idx:3, mult:2,       req:30 },
-  { id:'u10', name:'Nova Pulse',         cost:200000,    desc:'All generators x2',           effect:'allgen', mult:2,       req:50 },
-  { id:'u16', name:'Photon Lance',         cost:275000,    desc:'Quasar Beam x2',           effect:'gen',idx:4, mult:2,       req:60 },
-  { id:'u11',name:'Supernova Click',    cost:500000,    desc:'Click power x5',              effect:'click',  mult:5,       req:75 },
-  { id:'u12',name:'Quasar Sync',        cost:2000000,   desc:'All generators x2',           effect:'allgen', mult:2,       req:100 },
-  { id:'u17', name:'Cosmic Ignition',         cost:15000000,    desc:'Galaxy Engine x2',           effect:'gen',idx:5, mult:2,       req:100 },
-  { id:'u13',name:'Cosmic Override',    cost:35000000,  desc:'Click power x10',             effect:'click',  mult:10,      req:150 },
-  { id:'u18', name:'Dimensional Sync',         cost:60000000,    desc:'Multiverse Node x2',           effect:'gen',idx:6, mult:2,       req:150 },
-  { id:'u19', name:'Existence Compression',         cost:150000000,    desc:'Reality Condenser x2',           effect:'gen',idx:7, mult:2,       req:150 },
-  { id:'u20', name:'Astral Convergence',         cost:250000000,    desc:'Nebula Nexus x2',           effect:'gen',idx:8, mult:2,       req:150 },
-  { id:'u14',name:'Dominion Expansion',    cost:350000000,  desc:'Stellar Dominion x2',     effect:'gen',    idx:9, mult:2,      req:150 },
-    { id:'u21', name:'Supreme Covenant',         cost:400000000,    desc:'All generators x2',           effect:'allgen', mult:2,       req:150 },
+{ id:'u1', name:'Drift Calibration', cost:120, desc:'Nebula Drift output x2', effect:'gen', idx:0, mult:2, req:5 },
+
+{ id:'u3', name:'Graviton Stabilizer', cost:45000, desc:'Black Hole Tap x2', effect:'gen', idx:2, mult:2, req:50 },
+{ id:'u5', name:'Core Ignition Boost', cost:140000, desc:'Supernova Core x2', effect:'gen', idx:3, mult:2, req:75 },
+{ id:'u6', name:'Quasar Resonance Amplifier', cost:350000, desc:'Quasar Beam x2', effect:'gen', idx:4, mult:2, req:110 },
+{ id:'u7', name:'Engine Core Synchronization', cost:12000000, desc:'Galaxy Engine x2', effect:'gen', idx:5, mult:2, req:175 },
+{ id:'u8', name:'Dimensional Sync', cost:75000000, desc:'Multiverse Node x2', effect:'gen', idx:6, mult:2, req:225 },
+{ id:'u9', name:'Compression Field', cost:175000000, desc:'Reality Condenser x2', effect:'gen', idx:7, mult:2, req:250 },
+{ id:'u10', name:'Flux Stabilizer', cost:325000000, desc:'Nebula Nexus x2', effect:'gen', idx:8, mult:2, req:275 },
+{ id:'u11', name:'Dominion Control Matrix', cost:500000000, desc:'Stellar Dominion x2', effect:'gen', idx:9, mult:2, req:300 },
+{ id:'u12', name:'Singularity Cascade', cost:100000000000000, desc:'All generators x3', effect:'allgen', mult:3, req:650 },
+{ id:'u13', name:'Cosmic Overmind', cost:5000000000, desc:'Click power x10', effect:'click', mult:10, req:320 },
+{ id:'u14', name:'Reactive Calibration', cost:300, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:8 },
+{ id:'u15', name:'Neural Drift Sync', cost:1500, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:18 },
+{ id:'u16', name:'Photon Reflex Loop', cost:8000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:30 },
+{ id:'u17', name:'Quantum Input Mapping', cost:35000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:45 },
+{ id:'u18', name:'Stellar Feedback Mesh', cost:150000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:65 },
+{ id:'u19', name:'Graviton Response Grid', cost:600000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:85 },
+{ id:'u20', name:'Dark Matter Reflex Core', cost:2500000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:110 },
+{ id:'u21', name:'Singularity Neural Bridge', cost:12000000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:140 },
+{ id:'u22', name:'Cosmic Synapse Array', cost:60000000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:180 },
+{ id:'u23', name:'Reality Cognition Engine', cost:300000000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:220 },
+{ id:'u24', name:'Entropy Feedback Loop', cost:1200000000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:260 },
+{ id:'u25', name:'Void Neural Interface', cost:6000000000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:290 },
+{ id:'u26', name:'Quantum Awareness Grid', cost:25000000000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:320 },
+{ id:'u27', name:'Cosmic Perception Engine', cost:120000000000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:350 },
+{ id:'u28', name:'Universal Thought Matrix', cost:500000000000, desc:'Click power gains +1% of DPS', effect:'clickFromDps', percent:0.01, req:400 },
+{ id:'u29', name:'Rift Core Stabilization', cost:60000000000, desc:'Quantum Rift Core x2', effect:'gen', idx:10, mult:2, req:320 },
+{ id:'u2', name:'Pulsar Phase Lock', cost:7000, desc:'Pulsar Array x2', effect:'gen', idx:1, mult:2, req:25 },
+{ id:'u30', name:'Reactor Chrono Sync', cost:250000000000, desc:'Temporal Reactor x2', effect:'gen', idx:11, mult:2, req:350 },
+{ id:'u31', name:'Density Regulation', cost:900000000000, desc:'Dark Matter Foundry x2', effect:'gen', idx:12, mult:2, req:380 },
+{ id:'u32', name:'Engine Boundary Control', cost:4000000000000, desc:'Event Horizon Engine x2', effect:'gen', idx:13, mult:2, req:420 },
+{ id:'u33', name:'Core Collapse Stabilizer', cost:20000000000000, desc:'Singularity Core x2', effect:'gen', idx:14, mult:2, req:460 },
+{id: 'u34',name: 'Nebula Feedback Expansion',cost:75000000000000 ,desc: 'For every 10 Nebula Drift, gain +1% global DPS',effect: 'globalFromGen',genIdx: 0,per: 10,percent: 0.01,req:550},
 ];
 
 // ============================================================
 // REBIRTH UPGRADES
 // ============================================================
 const REBIRTH_UPGRADES = [
-  { id:'r1',  name:'Stardust Memory',  rpCost:1,  desc:'Start each run with 5000 dust',         effect:'startDust', val:5000 },
-  {id:'r13',rpCost:1,name:'Reality Feedback Loop',desc:'Unlock Entropy Converter (DPS → Click scaling)',effect:'unlockMain'},
-  { id:'r2',  name:'Eternal Click',    rpCost:1,  desc:'Permanent +50% click power',           effect:'clickMult', val:1.5 },
-  { id:'r7a', name:'Temporal Anchor I', rpCost:1, desc:'Start Nebula Drift at 5', effect:'startGenSingle', idx:0, val:5 },
-  { id:'r3',  name:'Cosmic Residue',   rpCost:2,  desc:'All generators +75% output',           effect:'genMult',   val:1.75 },
-  { id:'r7b', name:'Temporal Anchor II', rpCost:2, desc:'Start Pulsar Array at 5', effect:'startGenSingle', idx:1, val:5 },
-  { id:'r4',  name:'Nova Catalyst',    rpCost:3,  desc:'Start each run with 50,000 dust',      effect:'startDust', val:50000 },
-  { id:'r7c', name:'Temporal Anchor III', rpCost:3, desc:'Start Black Hole Tap at 5', effect:'startGenSingle', idx:2, val:5 },
-  { id:'r5',  name:'Singularity Tap',  rpCost:4,  desc:'Permanent x3 click power',             effect:'clickMult', val:3 },
-  { id:'r7d', name:'Temporal Anchor IV', rpCost:4, desc:'Start Supernova Core at 5', effect:'startGenSingle', idx:3, val:5 },
-  { id:'r6',  name:'Galaxy Memory',    rpCost:5,  desc:'All generators x2 output',             effect:'genMult',   val:2 },
-  { id:'r7e', name:'Temporal Anchor V', rpCost:5, desc:'Start Quasar Beam at 5', effect:'startGenSingle', idx:4, val:5 },
-  { id:'r8',  name:'Void Resonance',   rpCost:8,  desc:'Permanent x5 click power',             effect:'clickMult', val:5 },
-  { id:'r9',  name:'Nebula Cascade',   rpCost:10, desc:'All generators x3 output',             effect:'genMult',   val:3 },
-  { id:'r10', name:'Stellar Infinity', rpCost:15, desc:'Start with 10M dust',                  effect:'startDust', val:10000000 },
-  { id:'r11', name:'Dark Convergence', rpCost:20, desc:'Permanent x10 click power',            effect:'clickMult', val:10 },
-  { id:'r12', name:'Omni Collapse',    rpCost:30, desc:'Everything x10 permanently',           effect:'omni',      val:10 },
+{ id:'sr1', name:'Stardust Cache I', rpCost:1, desc:'Start with 1000 Stardust', effect:'startCurrency', amount:1000 },
+{ id:'sr2', name:'Stardust Cache II', rpCost:2, desc:'Start with 10000 Stardust', effect:'startCurrency', amount:10000 },
+{ id:'sr3', name:'Stardust Cache III', rpCost:3, desc:'Start with 100000 Stardust', effect:'startCurrency', amount:100000 },
+{ id:'sr4', name:'Stardust Cache IV', rpCost:5, desc:'Start with +1000000 Stardust', effect:'startCurrency', amount:1000000 },
+{ id:'sr5', name:'Stardust Cache V', rpCost:8, desc:'Start with 10000000 Stardust', effect:'startCurrency', amount:10000000 },
+
+{ id:'r1', name:'Gen Booster I', rpCost:1, desc:'Start with 10 Nebula Drift', effect:'startGen', idx:0, amount:10 },
+{ id:'r2', name:'Gen Booster II', rpCost:2, desc:'Start with 7 Pulsar Array', effect:'startGen', idx:1, amount:7 },
+{ id:'r3', name:'Gen Booster III', rpCost:3, desc:'Start with 5 Black Hole Tap', effect:'startGen', idx:2, amount:5 },
+{ id:'r4', name:'Gen Booster IV', rpCost:5, desc:'Start with 2 Supernova Core', effect:'startGen', idx:3, amount:2 },
+{ id:'r5', name:'Gen Booster V', rpCost:6, desc:'Start with 1 Quasar Beam', effect:'startGen', idx:4, amount:1 },
+
+{ id:'t1', name:'Rebirth booster I', rpCost:5, desc:'+0.5% DPS per rebirth', effect:'rebirthScaling', percent:0.005 },
+{ id:'t2', name:'Rebirth booster II', rpCost:10, desc:'+0.75% DPS per rebirth', effect:'rebirthScaling', percent:0.0075 },
+{ id:'t3', name:'Rebirth booster III', rpCost:20, desc:'+1% DPS per rebirth', effect:'rebirthScaling', percent:0.01 },
+{ id:'t4', name:'Rebirth booster IV', rpCost:40, desc:'+2% DPS per rebirth', effect:'rebirthScaling', percent:0.02 },
 ];
 // ============================================================
 // COSMETICS
@@ -855,16 +1069,21 @@ const COSMETICS = [
 // GENERATORS
 // ============================================================
 const GEN_DATA = [
-  { id:'g0', name:'Nebula Drift',    baseCost:10,      baseDps:0.1,  color:'#0a4a6e' },
-  { id:'g1', name:'Pulsar Array',    baseCost:100,     baseDps:0.5,  color:'#0a3a6e' },
-  { id:'g2', name:'Black Hole Tap',  baseCost:1100,    baseDps:4,    color:'#1a0a4e' },
-  { id:'g3', name:'Supernova Core',  baseCost:12000,   baseDps:20,   color:'#4e1a0a' },
-  { id:'g4', name:'Quasar Beam',     baseCost:130000,  baseDps:100,  color:'#1a4e0a' },
-  { id:'g5', name:'Galaxy Engine',   baseCost:1400000, baseDps:400,  color:'#4e3a0a' },
-  { id:'g6', name:'Multiverse Node', baseCost:20000000,baseDps:2000, color:'#4e0a3a' },
-  { id:'g7', name:'Reality Condenser', baseCost:50000000,baseDps:15000, color:'#FF0000' },
-  { id:'g8', name:'Nebula Nexus', baseCost:100000000,baseDps:40000, color:'#FF69B4' },
-  { id:'g9', name:'Stellar Dominion', baseCost:150000000,baseDps:100000, color:'#40E0D0' },
+  { id:'g0',  name:'Nebula Drift',         baseCost:10,              baseDps:0.1,          color:'#0a4a6e' },
+  { id:'g1',  name:'Pulsar Array',         baseCost:75,              baseDps:1,            color:'#0a3a6e' },
+  { id:'g2',  name:'Black Hole Tap',       baseCost:600,             baseDps:8,            color:'#1a0a4e' },
+  { id:'g3',  name:'Supernova Core',       baseCost:4000,            baseDps:45,           color:'#4e1a0a' },
+  { id:'g4',  name:'Quasar Beam',          baseCost:30000,           baseDps:250,          color:'#1a4e0a' },
+  { id:'g5',  name:'Galaxy Engine',        baseCost:250000,          baseDps:1400,         color:'#4e3a0a' },
+  { id:'g6',  name:'Multiverse Node',      baseCost:1800000,         baseDps:8500,         color:'#4e0a3a' },
+  { id:'g7',  name:'Reality Condenser',    baseCost:12000000,        baseDps:50000,        color:'#FF0000' },
+  { id:'g8',  name:'Nebula Nexus',         baseCost:85000000,        baseDps:300000,       color:'#FF69B4' },
+  { id:'g9',  name:'Stellar Dominion',     baseCost:600000000,       baseDps:1800000,      color:'#40E0D0' },
+  { id:'g10', name:'Quantum Rift Core',    baseCost:4500000000,      baseDps:12000000,     color:'#5c6bc0' },
+  { id:'g11', name:'Temporal Reactor',     baseCost:30000000000,     baseDps:85000000,     color:'#26a69a' },
+  { id:'g12', name:'Dark Matter Foundry',  baseCost:220000000000,    baseDps:600000000,    color:'#8e24aa' },
+  { id:'g13', name:'Event Horizon Engine', baseCost:1600000000000,   baseDps:4500000000,   color:'#ef5350' },
+  { id:'g14', name:'Singularity Core',     baseCost:12000000000000,  baseDps:35000000000,  color:'#212121' },
 ];
 
 const genCounts = GEN_DATA.map(() => 0);
@@ -884,6 +1103,56 @@ const REBIRTH_THRESHOLD = 1e9;
 // ============================================================
 // HELPERS
 // ============================================================
+function getRebirthColumns() {
+  return {
+    cash: REBIRTH_UPGRADES
+      .filter(u => u.effect === 'startCurrency')
+      .sort((a, b) => Number(a.rpCost) - Number(b.rpCost)),
+
+    gens: REBIRTH_UPGRADES
+      .filter(u => u.effect === 'startGen')
+      .sort((a, b) => a.rpCost - b.rpCost),
+
+    scaling: REBIRTH_UPGRADES
+      .filter(u => u.effect === 'rebirthScaling')
+      .sort((a, b) => a.rpCost - b.rpCost)
+  };
+}
+function openRebirthMarket() {
+  document.getElementById("rebirthOverlay").classList.remove("hidden");
+
+  switchTab('rebirth');
+
+  setTimeout(() => {
+    renderRebirthUpgrades();
+  }, 0);
+}
+
+function closeRebirthMarket() {
+  document.getElementById("rebirthOverlay").classList.add("hidden");
+}
+function isUpgradeUnlocked(u) {
+  return getTotalGenCount() >= u.req;
+}
+function getRebirthScalingPercent() {
+  let base = 0.001;
+
+  // Example upgrade hooks:
+  if (boughtUpgrades.has("t1")) base += 0.005;
+  if (boughtUpgrades.has("t2")) base += 0.0075;
+  if (boughtUpgrades.has("t3")) base += 0.01;
+  if (boughtUpgrades.has("t4")) base += 0.02;
+  
+
+  return base;
+}
+function rebirthScalingBonus() {
+  const rebirths = G?.rebirths ?? 0;
+  const perRebirth = getRebirthScalingPercent?.() ?? 0;
+
+  return 1 + rebirths * perRebirth;
+}
+
 function applyCosmetics() {
   const orb = document.getElementById('mainOrb');
 
@@ -927,28 +1196,55 @@ function getGenCost(idx) {
   return Math.floor(GEN_DATA[idx].baseCost * Math.pow(1.15, genCounts[idx]));
 }
 
+function nebulaDriftBonus() {
+  const nebulaCount = genCounts[0]; // g0 = Nebula Drift
+  const sets = Math.floor(nebulaCount / 10);
+  return 1 + (sets * 0.01); // 1% per 10
+}
+
 function calcDps() {
   let total = 0;
   const rebirthGenMult = getRebirthGenMult();
+
   GEN_DATA.forEach((g, i) => {
     let genDps = g.baseDps * genCounts[i];
+
     // Apply gen-specific upgrades
     UPGRADES.forEach(u => {
       if (boughtUpgrades.has(u.id) && u.effect === 'gen' && u.idx === i) {
         genDps *= u.mult;
       }
     });
+
     // Apply allgen upgrades
     UPGRADES.forEach(u => {
       if (boughtUpgrades.has(u.id) && u.effect === 'allgen') {
         genDps *= u.mult;
       }
     });
+
     genDps *= rebirthGenMult;
+
     total += genDps;
   });
-  return total;
+
+  // Global bonus (apply ONCE)
+  total *= nebulaDriftBonus();
+  let rebirthBonus = 1;
+
+try {
+  rebirthBonus = rebirthScalingBonus();
+} catch (e) {
+  console.error("REBIRTH BONUS CRASH:", e);
+  rebirthBonus = 1;
 }
+
+console.log("rebirthBonus:", rebirthBonus);
+
+total *= rebirthBonus;
+
+  return total;
+};
 
 function calcClickPower() {
   let power = 1;
@@ -973,15 +1269,6 @@ function calcClickPower() {
       power *= r.val;
     }
   });
-
-  // omni collapse
-  if (boughtRUpgrades.has('r12')) {
-    power *= 10;
-  }
-
-  const maxAllowedClick = G.dps * 0.75;
-
-power = Math.min(power, maxAllowedClick);
 
 return Math.max(1, Math.floor(power));
 }
@@ -1048,8 +1335,9 @@ function switchTab(tab) {
   document.getElementById('tabRebirth').classList.toggle('active', tab === 'rebirth');
   document.getElementById('tabStats').classList.toggle('active', tab === 'stats');
   document.getElementById('tabCosmetics').classList.toggle('active', tab === 'cosmetics');
-  if (tab === 'stats') renderStats();
-  if (tab === 'cosmetics') renderCosmetics();
+ if (tab === 'stats') renderStats();
+if (tab === 'cosmetics') renderCosmetics();
+if (tab === 'rebirth') renderRebirthUpgrades();
 }
 
 // ============================================================
@@ -1102,29 +1390,45 @@ function renderUpgrades() {
 
   const totalGen = getTotalGenCount();
 
-  UPGRADES.forEach(u => {
+  const sortedUpgrades = [...UPGRADES].sort((a, b) => {
+  const aUnlocked = totalGen >= a.req;
+  const bUnlocked = totalGen >= b.req;
+
+  if (aUnlocked && !bUnlocked) return -1;
+  if (!aUnlocked && bUnlocked) return 1;
+
+  return 0;
+});
+
+sortedUpgrades.forEach(u => {
     const bought = boughtUpgrades.has(u.id);
+    const unlocked = totalGen >= u.req;
+
+    // don't show bought upgrades at all
+    if (bought) return;
+
     const canAfford = G.dust >= u.cost;
-    const unlocked =
-  totalGen >= u.req &&
-  (!u.unlockR || boughtRUpgrades.has(u.unlockR));
 
     const card = document.createElement('div');
     card.className = 'upgrade-card' +
-      (bought ? ' bought' : '') +
       (!unlocked ? ' locked' : '') +
-      (!bought && canAfford && unlocked ? ' affordable' : '');
+      (canAfford && unlocked ? ' affordable' : '');
 
-    card.innerHTML =
-      '<div class="upgrade-name">' + u.name + '</div>' +
-      '<div class="upgrade-desc">' + u.desc + '</div>' +
-      (bought
-        ? '<div class="bought-badge">OWNED</div>'
-        : '<div class="upgrade-cost ' + (!canAfford ? 'cant-afford' : '') + '">' + fmt(u.cost) + ' dust</div>'
+    card.innerHTML = unlocked
+      ? (
+        '<div class="upgrade-name">' + u.name + '</div>' +
+        '<div class="upgrade-desc">' + u.desc + '</div>' +
+        '<div class="upgrade-cost ' + (!canAfford ? 'cant-afford' : '') + '">' +
+          fmt(u.cost) + ' dust</div>'
+      )
+      : (
+        '<div class="upgrade-name">???</div>' +
+        '<div class="upgrade-desc">???</div>' +
+        '<div class="upgrade-cost">Locked</div>'
       );
 
-    if (!bought && unlocked) {
-      card.addEventListener('click', function() {
+    if (unlocked) {
+      card.addEventListener('click', function () {
         buyUpgrade(u.id);
       });
     }
@@ -1137,38 +1441,52 @@ function renderUpgrades() {
 // RENDER REBIRTH UPGRADES
 // ============================================================
 function renderRebirthUpgrades() {
-  const panel = document.getElementById('panelRebirth');
-  panel.innerHTML = '';
+  const grid = document.getElementById('rebirthGrid');
+  if (!grid) return;
 
-  const rpLabel = document.createElement('div');
-  rpLabel.className = 'section-label';
-  rpLabel.innerHTML = 'Available: <span class="rp-badge">' + G.rebirthPoints + ' RP</span>';
-  panel.appendChild(rpLabel);
+  grid.innerHTML = '';
 
-  REBIRTH_UPGRADES.forEach(r => {
-    const bought = boughtRUpgrades.has(r.id);
-    const canAfford = G.rebirthPoints >= r.rpCost;
+  const cols = getRebirthColumns();
 
-    const card = document.createElement('div');
-    card.className = 'upgrade-card rebirth-card' +
-      (bought ? ' bought' : '') +
-      (!bought && canAfford ? ' affordable' : '');
+  Object.values(cols).forEach(column => {
+    const colDiv = document.createElement('div');
+    colDiv.className = 'rebirth-column';
 
-    card.innerHTML =
-      '<div class="upgrade-name">' + r.name + '</div>' +
-      '<div class="upgrade-desc">' + r.desc + '</div>' +
-      (bought
-        ? '<div class="bought-badge">OWNED</div>'
-        : '<div class="upgrade-cost ' + (!canAfford ? 'cant-afford' : '') + '">' + r.rpCost + ' RP</div>'
-      );
+    column.forEach((u, i) => {
+      const bought = boughtRUpgrades.has(u.id);
+      const canAfford = G.rebirthPoints >= u.rpCost;
+	  const prevOwned = i === 0 ? true : boughtRUpgrades.has(column[i - 1].id);
+const unlocked = prevOwned && canAfford;
 
-    if (!bought && canAfford) {
-      card.addEventListener('click', function() {
-        buyRebirthUpgrade(r.id);
-      });
-    }
+      const card = document.createElement('div');
 
-    panel.appendChild(card);
+      card.className =
+  'upgrade-card' +
+  (bought ? ' bought' : '') +
+  (!unlocked ? ' locked' : '');
+
+      const name = (!bought && !unlocked) ? '???' : u.name;
+const desc = (!bought && !unlocked)
+  ? 'Unlock previous upgrade first'
+  : u.desc;
+
+      card.innerHTML =
+        '<div class="upgrade-name">' + name + '</div>' +
+        '<div class="upgrade-desc">' + desc + '</div>' +
+        (bought
+          ? '<div class="bought-badge">OWNED</div>'
+          : '<div class="upgrade-cost ' + (!canAfford ? 'cant-afford' : '') + '">' +
+              u.rpCost + ' RP</div>'
+        );
+
+      if (!bought && canAfford) {
+        card.onclick = () => buyRebirthUpgrade(u.id);
+      }
+
+      colDiv.appendChild(card);
+    });
+
+    grid.appendChild(colDiv);
   });
 }
 
@@ -1313,11 +1631,18 @@ function buyRebirthUpgrade(id) {
 
   G.rebirthPoints -= r.rpCost;
   boughtRUpgrades.add(id);
+  if (r.effect === 'startGen') {
+  genCounts[r.idx] += r.amount;
+}
+  if (r.effect === 'startCurrency') {
+  G.dust += r.amount;
+  G.totalEarned += r.amount;
+}
 
   // Handle startGen immediately
-if (r.effect === 'startGenSingle') {
-  if (genCounts[r.idx] < r.val) {
-    genCounts[r.idx] = r.val;
+if (r.effect === 'startGen') {
+  if (genCounts[r.idx] < r.amount) {
+    genCounts[r.idx] = r.amount;
   }
 }
 
@@ -1372,7 +1697,7 @@ document.getElementById('confirmRebirth').addEventListener('click', function() {
 function doRebirth() {
 const earned = calcRebirthPoints();
 G.rebirthPoints += earned;
-G.rebirths = G.rebirthPoints;
+G.rebirths += earned;
   G.totalEarned = 0;
   G.dust = 0;
   G.totalClicks = 0;
@@ -1404,19 +1729,20 @@ G.rebirths = G.rebirthPoints;
 
 function applyRebirthPassives() {
   // Start dust
-  let startDust = 0;
-  REBIRTH_UPGRADES.forEach(r => {
-    if (boughtRUpgrades.has(r.id) && r.effect === 'startDust') {
-      startDust += r.val;
-    }
-  });
+let startDust = 0;
+
+REBIRTH_UPGRADES.forEach(r => {
+  if (boughtRUpgrades.has(r.id) && r.effect === 'startCurrency') {
+    startDust += r.amount;
+  }
+});
   G.dust = startDust;
   G.totalEarned = startDust;
 
   // Start generators
 REBIRTH_UPGRADES.forEach(r => {
-  if (boughtRUpgrades.has(r.id) && r.effect === 'startGenSingle') {
-    if (genCounts[r.idx] < r.val) {
+  if (boughtRUpgrades.has(r.id) && r.effect === 'startGen') {
+    if (genCounts[r.idx] < r.amount) {
       genCounts[r.idx] = r.val;
     }
   }
@@ -1651,7 +1977,7 @@ function deleteSave() {
   localStorage.removeItem('starForgeSave');
 
   // Reset main game values
-  G.dust = 100;
+  G.dust = 0;
   G.totalEarned = 0;
   G.totalClicks = 0;
   G.rebirths = 0;
