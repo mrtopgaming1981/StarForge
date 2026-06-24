@@ -995,7 +995,6 @@ const G = {
 // ============================================================
 const UPGRADES = [
 { id:'u1', name:'Drift Calibration', cost:120, desc:'Nebula Drift output x2', effect:'gen', idx:0, mult:2, req:5 },
-
 { id:'u3', name:'Graviton Stabilizer', cost:45000, desc:'Black Hole Tap x2', effect:'gen', idx:2, mult:2, req:50 },
 { id:'u5', name:'Core Ignition Boost', cost:140000, desc:'Supernova Core x2', effect:'gen', idx:3, mult:2, req:75 },
 { id:'u6', name:'Quasar Resonance Amplifier', cost:350000, desc:'Quasar Beam x2', effect:'gen', idx:4, mult:2, req:110 },
@@ -1456,7 +1455,7 @@ function renderRebirthUpgrades() {
       const bought = boughtRUpgrades.has(u.id);
       const canAfford = G.rebirthPoints >= u.rpCost;
 	  const prevOwned = i === 0 ? true : boughtRUpgrades.has(column[i - 1].id);
-const unlocked = prevOwned && canAfford;
+const unlocked = prevOwned;
 
       const card = document.createElement('div');
 
@@ -1629,22 +1628,41 @@ function buyRebirthUpgrade(id) {
   if (boughtRUpgrades.has(id)) return;
   if (G.rebirthPoints < r.rpCost) return;
 
+  // Check previous upgrade in chain
+  const cols = getRebirthColumns();
+
+  for (const column of Object.values(cols)) {
+    const index = column.findIndex(u => u.id === id);
+
+    if (index !== -1) {
+      if (index > 0) {
+        const previous = column[index - 1];
+
+        if (!boughtRUpgrades.has(previous.id)) {
+          return;
+        }
+      }
+      break;
+    }
+  }
+
   G.rebirthPoints -= r.rpCost;
   boughtRUpgrades.add(id);
-  if (r.effect === 'startGen') {
-  genCounts[r.idx] += r.amount;
-}
-  if (r.effect === 'startCurrency') {
-  G.dust += r.amount;
-  G.totalEarned += r.amount;
-}
 
-  // Handle startGen immediately
-if (r.effect === 'startGen') {
-  if (genCounts[r.idx] < r.amount) {
-    genCounts[r.idx] = r.amount;
+  if (r.effect === 'startGen') {
+    genCounts[r.idx] += r.amount;
   }
-}
+
+  if (r.effect === 'startCurrency') {
+    G.dust += r.amount;
+    G.totalEarned += r.amount;
+  }
+
+  if (r.effect === 'startGen') {
+    if (genCounts[r.idx] < r.amount) {
+      genCounts[r.idx] = r.amount;
+    }
+  }
 
   G.dps = calcDps();
   G.clickPower = calcClickPower();
@@ -1743,7 +1761,7 @@ REBIRTH_UPGRADES.forEach(r => {
 REBIRTH_UPGRADES.forEach(r => {
   if (boughtRUpgrades.has(r.id) && r.effect === 'startGen') {
     if (genCounts[r.idx] < r.amount) {
-      genCounts[r.idx] = r.val;
+      genCounts[r.idx] = r.amount;
     }
   }
 });
