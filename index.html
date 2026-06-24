@@ -1683,14 +1683,21 @@ function buyGenerator(idx) {
 // ============================================================
 // CLICK ORB
 // ============================================================
+let lastParticleTime = 0;
+
 document.getElementById('orbWrapper').addEventListener('click', function(e) {
   G.clickPower = calcClickPower();
   G.dust += G.clickPower;
   G.totalEarned += G.clickPower;
   G.totalClicks++;
-  spawnParticles(e.clientX, e.clientY);
-  spawnFloatText(e.clientX, e.clientY, '+' + fmt(G.clickPower));
-  renderUI();
+
+  const now = Date.now();
+
+  if (now - lastParticleTime > 50) {
+    spawnParticles(e.clientX, e.clientY);
+    spawnFloatText(e.clientX, e.clientY, '+' + fmt(G.clickPower));
+    lastParticleTime = now;
+  }
 });
 
 // ============================================================
@@ -1906,7 +1913,7 @@ function gameTick() {
   renderUI();
 
   // Rebuild DOM cards every ~1 second (50 ticks * 20ms = 1000ms)
-  if (tickCounter % 50 === 0) {
+  if (tickCounter % 60 === 0) {
     if (currentTab === 'upgrades') renderUpgrades();
     if (currentTab === 'rebirth')  renderRebirthUpgrades();
     if (currentTab === 'stats')    renderStats();
@@ -2047,7 +2054,7 @@ G.clickPower = calcClickPower();
 renderAll();
 
 // Start the game loop
-setInterval(gameTick, 50);
+setInterval(gameTick, 16);
 
 // Auto-save every 10 seconds
 setInterval(saveGame, 10000);
